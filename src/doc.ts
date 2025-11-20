@@ -1,15 +1,8 @@
-import * as ST from '@asmartbear/smarttype'
-
-/**
- * The components of document data that the underlying database loads and saves.
- */
-export type DocumentStorageData = {
-    frontMatter: ST.JSONType,
-    text: string,
-}
+import { SmartType, NativeFor } from '@asmartbear/smarttype'
+import { DocumentStorageData } from './driver'
 
 /** A document with YAML-compliant meta-data and arbitrary body content. */
-export class Document<ST extends ST.SmartType> {
+export class Document<ST extends SmartType = SmartType> {
 
     private originalFrontMatterHash: string
     private originalText: string
@@ -17,7 +10,9 @@ export class Document<ST extends ST.SmartType> {
     private constructor(
         public readonly frontMatterType: ST,
         public readonly uniqueId: string,
-        public frontMatter: ST.NativeFor<ST>,
+        public readonly ns: string,
+        public readonly name: string,
+        public frontMatter: NativeFor<ST>,
         public text: string,
     ) {
         this.originalFrontMatterHash = frontMatterType.toHash(frontMatter)
@@ -25,9 +20,9 @@ export class Document<ST extends ST.SmartType> {
     }
 
     /** Creates a document given data loaded from a database */
-    static fromStorageData<ST extends ST.SmartType>(frontMatterType: ST, uniqueId: string, data: DocumentStorageData) {
+    static fromStorageData<ST extends SmartType>(frontMatterType: ST, data: DocumentStorageData) {
         const frontMatter = frontMatterType.fromJSON(data.frontMatter)
-        return new Document(frontMatterType, uniqueId, frontMatter, data.text)
+        return new Document(frontMatterType, data.uniqueId, data.ns, data.name, frontMatter, data.text)
     }
 
     /** True if the current data values differ from what was originally constructed. */
@@ -35,11 +30,30 @@ export class Document<ST extends ST.SmartType> {
         return (this.originalText != this.text) || (this.frontMatterType.toHash(this.frontMatter) != this.originalFrontMatterHash)
     }
 
+    /** Resets what the document believes is the "database state", making the object now "clean". */
+    clearDirty(): void {
+        this.originalFrontMatterHash = this.frontMatterType.toHash(this.frontMatter)
+        this.originalText = this.text
+    }
+
     /** Retrieves the document data for storage in an external database. */
     getDocumentStorageData(): DocumentStorageData {
         return {
+            uniqueId: this.uniqueId,
+            ns: this.ns,
+            name: this.name,
             frontMatter: this.frontMatterType.toJSON(this.frontMatter),
             text: this.text,
         }
+    }
+
+    /** Checks that the types match, then returns `this` casted to that type for Typescript to enjoy. */
+    assertFrontMatterType<ST2 extends SmartType>(frontMatterType: ST2): Document<ST2> {
+        // istanbul ignore next
+        if (this.frontMatterType.description != frontMatterType.description) {
+            // istanbul ignore next
+            throw new Error("Document was expected to be of type " + frontMatterType.description + " but was of type " + this.frontMatterType.description)
+        }
+        return this as any
     }
 }
