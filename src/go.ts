@@ -1,13 +1,14 @@
 import * as ST from '@asmartbear/smarttype'
 import { BearDriver } from "./bear"
 import { Database } from "./db"
+import { BearSqlDatabase } from '@asmartbear/sqlight';
 
 const FM = ST.OBJ({
     foo: ST.ARRAY(ST.NUM().int().min(0)),
 });
 
 (async () => {
-    const db = new Database(new BearDriver())
+    const db = new Database(new BearDriver(BearSqlDatabase.singleton()))
 
     // const doc = await db.create(FM, 'db/testing', 'foo', { foo: [1, 2, 3] }, 'from the database')
     // console.log(doc.uniqueId)
