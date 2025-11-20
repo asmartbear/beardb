@@ -19,7 +19,7 @@ const FM = ST.OBJ({
     console.log(doc?.text)
     console.log(doc?.frontMatter)
 
-    doc?.frontMatter.foo.push(1)
-    await db.save()
+    // doc?.frontMatter.foo.push(1)
+    // await db.save()
 
 })().then(() => console.log("done"))
