@@ -94,4 +94,19 @@ export class Database {
         this.setCache(doc)
         return doc
     }
+
+    /**
+     * Loads an existing document by name or, if it does not exist, creates one with the given initialized data.
+     * 
+     * @param frontMatterType the data type for the front matter
+     * @param ns namespace for the document's ID
+     * @param name ID unique within the namespace
+     * @param initialFrontMatter front matter to start the new document with
+     * @param initialText text to start the new document with
+     */
+    async loadByNameOrCreate<ST extends SmartType>(frontMatterType: ST, ns: string, name: string, initialFrontMatter: NativeFor<ST>, initialText: string): Promise<Document<ST>> {
+        const doc = await this.loadByName(frontMatterType, ns, name)
+        if (doc) return doc
+        return await this.create(frontMatterType, ns, name, initialFrontMatter, initialText)
+    }
 }

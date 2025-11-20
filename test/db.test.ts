@@ -81,3 +81,24 @@ test('creating, saving, retrieving some documents', async () => {
     T.eq(d.text, b.text)
 })
 
+test('load or create', async () => {
+    const driver = new InMemoryDriver()
+    const db = new Database(driver)
+
+    // create if new
+    const a = await db.loadByNameOrCreate(FM, 'n', 'a', { foo: [1, 2, 3] }, 'hello')
+    T.eq(a.ns, 'n')
+    T.eq(a.name, 'a')
+    T.eq(a.frontMatter, { foo: [1, 2, 3] })
+    T.eq(a.text, "hello")
+    T.len(a.uniqueId, 36, "a UUID")
+
+    // "create" again with different initial conditions, has same result because it loaded it first
+    const b = await db.loadByNameOrCreate(FM, 'n', 'a', { foo: [4] }, 'hi')
+    T.be(a, b, "same object even")
+    T.eq(b.ns, 'n')
+    T.eq(b.name, 'a')
+    T.eq(b.frontMatter, { foo: [1, 2, 3] })
+    T.eq(b.text, "hello")
+    T.len(b.uniqueId, 36, "a UUID")
+})
