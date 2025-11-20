@@ -14,15 +14,16 @@ export class Document<ST extends SmartType = SmartType> {
         public readonly name: string,
         public frontMatter: NativeFor<ST>,
         public text: string,
+        private readonly driverData: unknown
     ) {
         this.originalFrontMatterHash = frontMatterType.toHash(frontMatter)
         this.originalText = text
     }
 
     /** Creates a document given data loaded from a database */
-    static fromStorageData<ST extends SmartType>(frontMatterType: ST, data: DocumentStorageData) {
+    static fromStorageData<ST extends SmartType>(frontMatterType: ST, data: DocumentStorageData<unknown>) {
         const frontMatter = frontMatterType.fromJSON(data.frontMatter)
-        return new Document(frontMatterType, data.uniqueId, data.ns, data.name, frontMatter, data.text)
+        return new Document(frontMatterType, data.uniqueId, data.ns, data.name, frontMatter, data.text, data.driverData)
     }
 
     /** True if the current data values differ from what was originally constructed. */
@@ -37,13 +38,14 @@ export class Document<ST extends SmartType = SmartType> {
     }
 
     /** Retrieves the document data for storage in an external database. */
-    getDocumentStorageData(): DocumentStorageData {
+    getDocumentStorageData(): DocumentStorageData<unknown> {
         return {
             uniqueId: this.uniqueId,
             ns: this.ns,
             name: this.name,
             frontMatter: this.frontMatterType.toJSON(this.frontMatter),
             text: this.text,
+            driverData: this.driverData
         }
     }
 

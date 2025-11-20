@@ -15,7 +15,7 @@
     "clean": "rimraf dist",
     "prebuild": "npm run clean",
     "build": "tsc",
-    "go": "tsx src/bear.ts",
+    "go": "tsx src/go.ts",
     "main": "tsc && node dist/index.js",
     "minify": "uglifyjs --compress --mangle --output dist/index.min.js -- dist/index.js",
     "postbuild": "npm run minify",
@@ -40,6 +40,7 @@
   "dependencies": {
     "@asmartbear/simplified": "^1.0.8",
     "@asmartbear/smarttype": "^1.0.15",
+    "@asmartbear/sqlight": "^1.0.3",
     "tiny-invariant": "^1.3.3"
   },
   "license": "MIT",

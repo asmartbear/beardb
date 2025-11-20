@@ -10,7 +10,7 @@ export class Database {
     private docsByName = new Map<string, Document>()
 
     constructor(
-        public readonly driver: IDriver
+        public readonly driver: IDriver<unknown>
     ) {
     }
 
