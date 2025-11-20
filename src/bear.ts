@@ -4,10 +4,7 @@ import { BearSqlDatabase, BearSqlNote } from '@asmartbear/sqlight'
 /** An `IDriver` implementation using Bear */
 export class BearDriver implements IDriver<BearSqlNote> {
 
-    private bear: BearSqlDatabase
-
     constructor() {
-        this.bear = new BearSqlDatabase()
     }
 
     /** Convert our document data to the full string we set in Bear */
@@ -34,7 +31,7 @@ export class BearDriver implements IDriver<BearSqlNote> {
     }
 
     async create(partialData: NewDocumentStorageData): Promise<DocumentStorageData<BearSqlNote>> {
-        const note = await this.bear.createAndReturnNote(this.bearContent(partialData))
+        const note = await BearSqlDatabase.singleton.createAndReturnNote(this.bearContent(partialData))
         return {
             ...partialData,
             uniqueId: note.uniqueId,
@@ -51,13 +48,13 @@ export class BearDriver implements IDriver<BearSqlNote> {
     }
 
     async loadById(uniqueId: string): Promise<DocumentStorageData<BearSqlNote> | undefined> {
-        const note = await this.bear.getNoteByUniqueId(uniqueId)
+        const note = await BearSqlDatabase.singleton.getNoteByUniqueId(uniqueId)
         if (!note) return undefined;
         return await this.bearNoteToDocumentData(note)
     }
 
     async loadByName(ns: string, name: string): Promise<DocumentStorageData<BearSqlNote> | undefined> {
-        const notes = await this.bear.getNotes({
+        const notes = await BearSqlDatabase.singleton.getNotes({
             limit: 1,
             titleExact: name,
             tagsInclude: [ns],
