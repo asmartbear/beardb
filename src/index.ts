@@ -1,1 +1,5 @@
 export * from './doc'
+export * from './driver'
+export * from './db'
+export { InMemoryDriver } from './memory'
+export { BearDriver } from './bear'
