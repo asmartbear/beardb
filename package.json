@@ -38,9 +38,10 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "@asmartbear/filesystem": "^1.0.3",
     "@asmartbear/simplified": "^1.0.8",
     "@asmartbear/smarttype": "^1.0.15",
-    "@asmartbear/sqlight": "^1.0.11",
+    "@asmartbear/sqlight": "^1.0.12",
     "tiny-invariant": "^1.3.3"
   },
   "license": "MIT",
