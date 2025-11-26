@@ -25,6 +25,7 @@
     "postpublish": "git push origin main --follow-tags"
   },
   "devDependencies": {
+    "@asmartbear/testutil": "^1.0.5",
     "@types/jest": "^30.0.0",
     "@types/mocha": "^10.0.10",
     "@types/node": "^24.10.1",
@@ -38,7 +39,7 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "@asmartbear/filesystem": "^1.0.3",
+    "@asmartbear/filesystem": "^1.0.4",
     "@asmartbear/simplified": "^1.0.8",
     "@asmartbear/smarttype": "^1.0.15",
     "@asmartbear/sqlight": "^1.0.12",

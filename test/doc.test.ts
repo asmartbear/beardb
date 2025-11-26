@@ -1,4 +1,4 @@
-import * as T from "./testutil"
+import * as T from "@asmartbear/testutil"
 import * as ST from '@asmartbear/smarttype'
 import { Document } from '../src/doc'
 

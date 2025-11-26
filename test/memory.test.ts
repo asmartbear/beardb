@@ -1,4 +1,4 @@
-import * as T from "./testutil"
+import * as T from "@asmartbear/testutil"
 import { InMemoryDriver } from '../src/memory'
 import { NewDocumentStorageData } from "../src/driver"
 
