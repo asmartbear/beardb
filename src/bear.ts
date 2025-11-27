@@ -33,12 +33,18 @@ export class BearDriver implements IDriver<BearSqlNote> {
     }
 
     async create(partialData: NewDocumentStorageData): Promise<DocumentStorageData<BearSqlNote>> {
-        const note = await this.database.createAndReturnNote(this.bearContent(partialData))
-        return {
+        // Create the note with the right tag
+        const note = await this.database.createNote([partialData.ns])
+        // Form the full data that the database will need to track it
+        const fullData: DocumentStorageData<BearSqlNote> = {
             ...partialData,
             uniqueId: note.uniqueId,
             driverData: note,
         }
+        // Save the new note against this data
+        await this.save(fullData)
+        // Now we're ready for the main database
+        return fullData
     }
 
     async save(data: DocumentStorageData<BearSqlNote>): Promise<void> {
